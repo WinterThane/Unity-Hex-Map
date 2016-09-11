@@ -11,19 +11,26 @@ public class HexGrid : MonoBehaviour
 
     private Canvas gridCanvas;
     HexCell[] _cells;
+    private HexMesh hexMesh;
     
     void Awake()
     {
         gridCanvas = GetComponentInChildren<Canvas>();
+        hexMesh = GetComponentInChildren<HexMesh>();
         _cells = new HexCell[height * width];
 
         for (int z = 0, i = 0; z < height; z++)
         {
             for (var x = 0; x < width; x++)
             {
-                CreateCell(x, z, i);
+                CreateCell(x, z, i++);
             }
         }
+    }
+
+    void Start()
+    {
+        hexMesh.Triangulate(_cells);
     }
 
     void CreateCell(int x, int z, int i)
