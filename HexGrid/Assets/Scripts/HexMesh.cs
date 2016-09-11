@@ -44,6 +44,7 @@ public class HexMesh : MonoBehaviour
         _hexMesh.vertices = _vertices.ToArray();
         _hexMesh.triangles = _triangles.ToArray();
         _hexMesh.RecalculateNormals();
+        meshColider.sharedMesh = _hexMesh;
     }
 
     void Triangulate(HexCell cell)
