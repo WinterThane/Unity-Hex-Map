@@ -12,15 +12,15 @@ public class HexGrid : MonoBehaviour
     public HexCell cellPrefab;
     public Text cellLabelPrefab;
 
-    Canvas gridCanvas;
-    HexCell[] cells;
-    HexMesh hexMesh;
+    Canvas _gridCanvas;
+    HexCell[] _cells;
+    HexMesh _hexMesh;
 
     void Awake()
     {
-        gridCanvas = GetComponentInChildren<Canvas>();
-        hexMesh = GetComponentInChildren<HexMesh>();
-        cells = new HexCell[height * width];
+        _gridCanvas = GetComponentInChildren<Canvas>();
+        _hexMesh = GetComponentInChildren<HexMesh>();
+        _cells = new HexCell[height * width];
 
         for (int z = 0, i = 0; z < height; z++)
         {
@@ -33,36 +33,17 @@ public class HexGrid : MonoBehaviour
 
     void Start()
     {
-        hexMesh.Triangulate(cells);
+        _hexMesh.Triangulate(_cells);
     }
 
-    void Update()
-    {
-        if (Input.GetMouseButton(0))
-        {
-            HandleInput();
-        }
-    }
-
-    void HandleInput()
-    {
-        var inputRay = Camera.main.ScreenPointToRay(Input.mousePosition);
-        RaycastHit hit;
-
-        if (Physics.Raycast(inputRay, out hit))
-        {
-            TouchCell(hit.point);
-        }
-    }
-
-    void TouchCell(Vector3 position)
+    public void ColorCell(Vector3 position, Color color)
     {
         position = transform.InverseTransformPoint(position);
         var coordinates = HexCoordinates.FromPosition(position);
         var index = coordinates.X + coordinates.Z * width + coordinates.Z / 2;
-        var cell = cells[index];
-        cell.color = touchedColor;
-        hexMesh.Triangulate(cells);
+        var cell = _cells[index];
+        cell.color = color;
+        _hexMesh.Triangulate(_cells);
     }
 
     void CreateCell(int x, int z, int i)
@@ -72,14 +53,14 @@ public class HexGrid : MonoBehaviour
         position.y = 0f;
         position.z = z * (HexMetrics.outerRadius * 1.5f);
 
-        var cell = cells[i] = Instantiate(cellPrefab);
+        var cell = _cells[i] = Instantiate(cellPrefab);
         cell.transform.SetParent(transform, false);
         cell.transform.localPosition = position;
         cell.coordinates = HexCoordinates.FromOffsetCoordinates(x, z);
         cell.color = defaultColor;
 
         var label = Instantiate(cellLabelPrefab);
-        label.rectTransform.SetParent(gridCanvas.transform, false);
+        label.rectTransform.SetParent(_gridCanvas.transform, false);
         label.rectTransform.anchoredPosition = new Vector2(position.x, position.z);
         label.text = cell.coordinates.ToStringOnSeparateLines();
     }
