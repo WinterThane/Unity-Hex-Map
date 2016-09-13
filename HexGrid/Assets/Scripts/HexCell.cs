@@ -9,7 +9,7 @@ public class HexCell : MonoBehaviour
     [SerializeField]
     HexCell[] neighbours;
 
-    public HexCell GetNeighbour(HexDirection direction, HexCell cell)
+    public HexCell GetNeighbour(HexDirection direction)
     {
         return neighbours[(int) direction];
     }
