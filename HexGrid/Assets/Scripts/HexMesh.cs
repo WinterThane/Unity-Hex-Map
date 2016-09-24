@@ -73,6 +73,7 @@ public class HexMesh : MonoBehaviour
         var bridge = HexMetrics.GetBridge(direction);
         var v3 = v1 + bridge;
         var v4 = v2 + bridge;
+        v3.y = v4.y = neighbour.Elevation * HexMetrics.elevationStep;
 
         AddQuad(v1, v2, v3, v4);
         AddQuadColor(cell.color, neighbour.color);
@@ -81,7 +82,9 @@ public class HexMesh : MonoBehaviour
 
         if (direction <= HexDirection.E && nextNeighbour != null)
         {
-            AddTriangle(v2, v4, v2 + HexMetrics.GetBridge(direction.Next()));
+            var v5 = v2 + HexMetrics.GetBridge(direction.Next());
+            v5.y = nextNeighbour.Elevation * HexMetrics.elevationStep;
+            AddTriangle(v2, v4, v5);
             AddTriangleColor(cell.color, neighbour.color, nextNeighbour.color);
         }
     }

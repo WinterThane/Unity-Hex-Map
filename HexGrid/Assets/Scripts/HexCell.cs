@@ -4,10 +4,27 @@ public class HexCell : MonoBehaviour
 {
     public HexCoordinates coordinates;
     public Color color;
-    public int elevation;
+    int _elevation;
+    public RectTransform uiRect;
 
     [SerializeField]
     HexCell[] neighbours;
+
+    public int Elevation
+    {
+        get { return _elevation; }
+        set
+        {
+            _elevation = value;
+            var position = transform.localPosition;
+            position.y = value * HexMetrics.elevationStep;
+            transform.localPosition = position;
+
+            var uiPosition = uiRect.localPosition;
+            uiPosition.z = _elevation * -HexMetrics.elevationStep;
+            uiRect.localPosition = uiPosition;
+        }
+    }
 
     public HexCell GetNeighbour(HexDirection direction)
     {
